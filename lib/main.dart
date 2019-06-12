@@ -35,11 +35,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String fileContent;
+  String durationMsg;
 
   @override
   void initState() {
     super.initState();
     setState(() {
+      durationMsg = '';
       fileContent = '';
     });
   }
@@ -49,10 +51,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void readData() {
+    DateTime begin = new DateTime.now();
     askPermission();
 
     widget.storage.readData().then((String value) {
+      DateTime end = new DateTime.now();
+      String duration = end.difference(begin).inMilliseconds.toString();
       setState(() {
+        durationMsg = 'Finished in ' + duration + 'ms';
         fileContent = value;
       });
     });
@@ -68,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            Text(durationMsg),
             Text(fileContent),
             RaisedButton(
               onPressed: readData,
